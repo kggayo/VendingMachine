@@ -1,0 +1,187 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .button-round {
+        border-radius: 50%;
+        border: none;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin: 4px 2px;
+        width: 7rem
+    }
+
+    .price {
+        display: block;
+        text-align: center;
+        font-weight: bold;
+        color: #ffd800;
+    }
+
+    .btn-item {
+        width: 10rem
+    }
+
+    .portions {
+        font-size: small;
+        color: #ffd800;
+    }
+</style>
+
+
+<div class="text-center">
+    <h2 class="display-4">The Vending Machine</h2>
+    <div class="card">
+        <div class="card-body pt-0">
+            <div class="card-body">
+                <h5 class="card-title">ITEMS</h5>
+                <div class="vending-items">
+                    @*<button type="button" class="btn btn-success btn-lg btn-item"><span class="item-name">TEA</span> <span class="price">€ 1.30</span><span class="portions">10 <span class="portions">Portions</span></span></button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card pr-4 pb-4 pl-4mb-2">
+        <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-info"></h6>
+
+            <h4 class="text-info">INSERTED COINS:</h4>
+            <div class="alert alert-info h4" id="coinAmount" style="width: 10rem; margin: auto">0</div>
+            <button type="button" class="btn btn-danger btn-lg btn-cancel mt-2" style="display: none">CANCEL</button>
+
+            <div class="mt-3">
+                <button type="button" data-value="1" data-denomination="EURO" class="btn btn-warning btn-lg button-round btn-coin">1 <br /> EURO</button>
+                <button type="button" data-value="10" data-denomination="CENT" class="btn btn-warning btn-lg button-round btn-coin">10 CENTS</button>
+                <button type="button" data-value="20" data-denomination="CENT" class="btn btn-warning btn-lg button-round btn-coin">20 CENTS</button>
+                <button type="button" data-value="50" data-denomination="CENT" class="btn btn-warning btn-lg button-round btn-coin">50 CENTS</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var coinsInserted = [];
+
+        $(function () {
+
+            var displayItems = function () {
+                $('.vending-items').empty();
+                $.get("/home/GetVendingItems", function (data) {
+                    $.each(data, function (key, value) {
+                        $('.vending-items')
+                            .append('<button type="button" disabled data-name=' + value.name + ' data-price= ' + value.price + ' data-Quantity = ' + value.quantity + ' class="btn btn-success btn-lg btn-item m-3"><span class="item-name">' + value.name + '</span> <span class="price">€ ' + value.price.toFixed(2) + '</span><span class="portions">' + value.quantity + ' <span class="portions">Portions</span></span></button>');
+                    });
+
+                    itemClicked();
+                });
+            }
+
+            displayItems();
+
+            var itemClicked = function () {
+                $('.btn-item').one('click', function () {
+                    var data = $(this).data();
+
+                    $.post('/home/WithdrawVendingItem', { item: data, coins: coinsInserted }, function (result) {
+                        ShowResultUI(result);
+                    });
+                });
+            };
+
+            $('.btn-coin').click(function () {
+                var $this = this;
+
+                var data = $($this).data();
+
+
+                var l = coinsInserted.length;
+                
+                if (l > 0) {
+                    var found = false;
+                    for (var i = 0; i < l; i++) {
+                        if (coinsInserted[i].Value == data.value) {
+                            coinsInserted[i].Quantity += 1;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        coinsInserted.push({
+                            Value: data.value,
+                            CoinDenomination: data.denomination,
+                            Quantity: 1
+                        });
+                    }
+                } else {
+                    coinsInserted.push({
+                        Value: data.value,
+                        CoinDenomination: data.denomination,
+                        Quantity: 1
+                    });
+                }
+
+                UpdateUIState(coinsInserted);
+            });
+
+            function ShowResultUI(result) {
+                if (result.isSuccess) {
+                    var coins = '';
+                    if (result.returnedCoins.length > 0) {
+                        coins = '\nCoins:';
+                        $.each(result.returnedCoins, function (key, value) {
+                            coins += '\n ' + value.value + ' ' + value.coinDenomination + ' (x' + value.quantity + ')';
+                        });
+                    }
+
+                    alert('Thank you! Change: € ' + result.returnedAmount.toFixed(2) + coins);
+                    displayItems();
+                    coinsInserted = [];
+                    UpdateUIState(coinsInserted);
+                } else {
+                    alert('Error: ' + result.message);
+                    itemClicked();
+                }
+            }
+
+            function UpdateUIState(coinsInserted) {
+                var amount = 0.0;
+                for (var i = 0; i < coinsInserted.length; i++) {
+                    if (coinsInserted[i].CoinDenomination == 'CENT') {
+                        amount += ((coinsInserted[i].Value * coinsInserted[i].Quantity) / 100);
+                    } else {
+                        amount += coinsInserted[i].Value * coinsInserted[i].Quantity;
+                    }
+                }
+
+                if (amount > 0) {
+                    $('.btn-cancel').show();
+                } else {
+                    $('.btn-cancel').hide();
+                }
+
+                $('#coinAmount').text(amount.toFixed(2));
+                SetEnableItem(amount);
+            }
+
+            function SetEnableItem(amount) {
+                $('.btn-item').each(function (index) {
+                    var data = $(this).data();
+                    
+                    if (data.price <= amount && data.quantity > 0) {
+                        $(this).removeAttr('disabled');
+                    } else {
+                        $(this).attr("disabled", true);
+                    }
+                });
+            }
+
+            $('.btn-cancel').click(function () {
+                coinsInserted = [];
+                UpdateUIState(coinsInserted);
+            });
+        });
+    </script>
+}
