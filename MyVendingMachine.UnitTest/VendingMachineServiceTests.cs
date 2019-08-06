@@ -16,10 +16,10 @@ namespace MyVendingMachine.UnitTest
         public void WithdrawVendingItem_WithdrawItemNoChange_ReturnsThankYouNoChange()
         {
             List<VendingCoin> insertedCoins = new List<VendingCoin>() {
-                new VendingCoin(){ Value = 1, Quantity = 1, CoinDenomination = CoinDenomination.EURO },
-                new VendingCoin(){ Value = .20M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = .10M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = 1, Quantity = 1},
+                new VendingCoin(){ Value = .20M, Quantity = 1},
+                new VendingCoin(){ Value = .50M, Quantity = 1 },
+                new VendingCoin(){ Value = .10M, Quantity = 1 },
             };
             VendingMachineService vms = new VendingMachineService(new VendingCoinInventoryService());
 
@@ -34,11 +34,11 @@ namespace MyVendingMachine.UnitTest
         public void WithdrawVendingItem_WithdrawItemWithChange_ReturnsChange()
         {
             List<VendingCoin> insertedCoins = new List<VendingCoin>() {
-                new VendingCoin(){ Value = 1, Quantity = 1, CoinDenomination = CoinDenomination.EURO },
-                new VendingCoin(){ Value = .20M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = .10M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = .10M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = 1, Quantity = 1 },
+                new VendingCoin(){ Value = .20M, Quantity = 1 },
+                new VendingCoin(){ Value = .50M, Quantity = 1  },
+                new VendingCoin(){ Value = .10M, Quantity = 1 },
+                new VendingCoin(){ Value = .10M, Quantity = 1 },
             };
             VendingMachineService vms = new VendingMachineService(new VendingCoinInventoryService());
 
@@ -53,16 +53,16 @@ namespace MyVendingMachine.UnitTest
         public void WithdrawVendingItem_WithdrawItemNoChange_ReturnsInsertedCoins()
         {
             List<VendingCoin> insertedCoins = new List<VendingCoin>() {
-                new VendingCoin(){ Value = 1, Quantity = 1, CoinDenomination = CoinDenomination.EURO },
-                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = 1, Quantity = 1 },
+                new VendingCoin(){ Value = .50M, Quantity = 1 },
+                new VendingCoin(){ Value = .50M, Quantity = 1 },
             };
             VendingCoinInventoryService vis = new VendingCoinInventoryService();
             var invSnapshot = vis.CreateInventorySnapshot();
             VendingCoinRepository.VendingCoins.Clear();
             VendingCoinRepository.VendingCoins = new List<VendingCoin>()
             {
-                new VendingCoin() { Value = 10, CoinDenomination = CoinDenomination.CENT, Quantity = 1 },
+                new VendingCoin() { Value = .10M, Quantity = 1 },
             };
             VendingMachineService vms = new VendingMachineService(new VendingCoinInventoryService());
 
@@ -78,18 +78,18 @@ namespace MyVendingMachine.UnitTest
         public void WithdrawVendingItem_WithdrawItemReturnChangeFromInsertedCoins_ReturnsFewerCoinsChange()
         {
             List<VendingCoin> insertedCoins = new List<VendingCoin>() {
-                new VendingCoin(){ Value = 1, Quantity = 1, CoinDenomination = CoinDenomination.EURO },
-                new VendingCoin(){ Value = .20M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = .10M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = .20M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = 1, Quantity = 1 },
+                new VendingCoin(){ Value = .20M, Quantity = 1 },
+                new VendingCoin(){ Value = .50M, Quantity = 1 },
+                new VendingCoin(){ Value = .10M, Quantity = 1 },
+                new VendingCoin(){ Value = .20M, Quantity = 1 },
             };
             VendingCoinInventoryService vis = new VendingCoinInventoryService();
             var invSnapshot = vis.CreateInventorySnapshot();
             VendingCoinRepository.VendingCoins.ToList().Clear();
             VendingCoinRepository.VendingCoins = new List<VendingCoin>()
             {
-                new VendingCoin() { Value = .10M, CoinDenomination = CoinDenomination.CENT, Quantity = 1 },
+                new VendingCoin() { Value = .10M, Quantity = 1 },
             };
             VendingMachineService vms = new VendingMachineService(new VendingCoinInventoryService());
 
@@ -106,9 +106,9 @@ namespace MyVendingMachine.UnitTest
         public void WithdrawVendingItem_WithdrawItemNoStocks_ReturnsInsertedCoins()
         {
             List<VendingCoin> insertedCoins = new List<VendingCoin>() {
-                new VendingCoin(){ Value = 1, Quantity = 1, CoinDenomination = CoinDenomination.EURO },
-                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = 1, Quantity = 1 },
+                new VendingCoin(){ Value = .50M, Quantity = 1 },
+                new VendingCoin(){ Value = .50M, Quantity = 1 },
             };
 
             VendingMachineService vms = new VendingMachineService(new VendingCoinInventoryService());

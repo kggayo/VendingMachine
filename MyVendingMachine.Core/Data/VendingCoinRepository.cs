@@ -13,10 +13,10 @@ namespace MyVendingMachine.Core.Data
         {
             VendingCoins = new List<VendingCoin>()
             {
-                new VendingCoin(){ Value = 1, CoinDenomination = CoinDenomination.EURO, Quantity = 100 },
-                new VendingCoin(){ Value = .10M, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
-                new VendingCoin(){ Value = .20M, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
-                new VendingCoin(){ Value = .50M, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
+                new VendingCoin(){ Value = 1, Quantity = 100 },
+                new VendingCoin(){ Value = .10M, Quantity = 100 },
+                new VendingCoin(){ Value = .20M, Quantity = 100 },
+                new VendingCoin(){ Value = .50M, Quantity = 100 },
             };
         }
     }

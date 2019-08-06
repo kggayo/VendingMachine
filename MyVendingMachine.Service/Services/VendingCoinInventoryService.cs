@@ -16,23 +16,11 @@ namespace MyVendingMachine.Service.Services
             if (changeAmount < 0)
                 throw new ArgumentException("Change Amount is a negative number.");
 
-            List<VendingCoin> coinsForChange = new List<VendingCoin>();
+            IEnumerable<VendingCoin> coinsForChange = new List<VendingCoin>();
 
             try
             {
-                var euroChangeAmount = Math.Truncate(changeAmount);
-                var centChangeAmount = changeAmount % 1;
-
-                var euroCoinsForChange = PickCoins(euroChangeAmount, CoinDenomination.EURO);
-
-                var euroChangeRemaining = euroChangeAmount - euroCoinsForChange.Sum(s => s.Amount);
-                if (euroChangeRemaining > 0)
-                    centChangeAmount += euroChangeRemaining; 
-
-                var centCoinsForChange = PickCoins(centChangeAmount, CoinDenomination.CENT);
-
-                coinsForChange.AddRange(euroCoinsForChange);
-                coinsForChange.AddRange(centCoinsForChange);
+                coinsForChange = PickCoins(changeAmount);
             }
             catch (Exception e)
             {
@@ -56,7 +44,7 @@ namespace MyVendingMachine.Service.Services
                 }
                 else
                 {
-                    VendingCoinRepository.VendingCoins.Add(new VendingCoin() { Value = coin.Value, CoinDenomination = coin.CoinDenomination, Quantity = coin.Quantity });
+                    VendingCoinRepository.VendingCoins.Add(new VendingCoin() { Value = coin.Value, Quantity = coin.Quantity });
                 }
             }
         }
@@ -73,13 +61,12 @@ namespace MyVendingMachine.Service.Services
             VendingCoinRepository.VendingCoins = snapshot;
         }
 
-        private IEnumerable<VendingCoin> PickCoins(decimal amount, CoinDenomination coinDenomination)
+        private IEnumerable<VendingCoin> PickCoins(decimal amount)
         {
             List<VendingCoin> coinsForChange = new List<VendingCoin>();
 
             var coinsInv = VendingCoinRepository.VendingCoins
-                .Where(w => w.CoinDenomination == coinDenomination &&
-                w.Value <= amount && w.Quantity > 0)
+                .Where(w => w.Quantity > 0)
                 .OrderByDescending(o => o.Value).ToList();
 
             if (amount > 0)
@@ -97,7 +84,7 @@ namespace MyVendingMachine.Service.Services
                         if (coinForChange != null)
                             coinForChange.Quantity += 1;
                         else
-                            coinsForChange.Add(new VendingCoin() { Value = coin.Value, Quantity = 1, CoinDenomination = coin.CoinDenomination });
+                            coinsForChange.Add(new VendingCoin() { Value = coin.Value, Quantity = 1 });
 
                         i--;//return to same index - its possible the current value can accomodate change coin
                     }

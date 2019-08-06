@@ -41,16 +41,16 @@ namespace MyVendingMachine.UnitTest
             VendingCoinRepository.VendingCoins.Clear();
             VendingCoinRepository.VendingCoins = new List<VendingCoin>()
             {
-                new VendingCoin() { Value = .10M, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
-                new VendingCoin() { Value = .20M, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
-                new VendingCoin() { Value = .50M, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
+                new VendingCoin() { Value = .10M, Quantity = 100 },
+                new VendingCoin() { Value = .20M, Quantity = 100 },
+                new VendingCoin() { Value = .50M, Quantity = 100 },
             };
 
             var result = vis.PickCoinsForChange(1.30M);
             var changeAmount = result.Sum(s => s.Amount);
 
             Assert.Equal(1.30M, changeAmount);
-            Assert.Equal(0, result.Count(c => c.CoinDenomination == CoinDenomination.EURO));
+            Assert.Equal(0, result.Count(c => Math.Truncate(c.Value) > 0));
             vis.RestoreInventorySnapshot(invSnapshot.ToList());
         }
     }
