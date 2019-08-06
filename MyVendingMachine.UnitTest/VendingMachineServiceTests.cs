@@ -17,9 +17,9 @@ namespace MyVendingMachine.UnitTest
         {
             List<VendingCoin> insertedCoins = new List<VendingCoin>() {
                 new VendingCoin(){ Value = 1, Quantity = 1, CoinDenomination = CoinDenomination.EURO },
-                new VendingCoin(){ Value = 20, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = 50, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = 10, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .20M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .10M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
             };
             VendingMachineService vms = new VendingMachineService(new VendingCoinInventoryService());
 
@@ -35,10 +35,10 @@ namespace MyVendingMachine.UnitTest
         {
             List<VendingCoin> insertedCoins = new List<VendingCoin>() {
                 new VendingCoin(){ Value = 1, Quantity = 1, CoinDenomination = CoinDenomination.EURO },
-                new VendingCoin(){ Value = 20, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = 50, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = 10, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = 10, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .20M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .10M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .10M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
             };
             VendingMachineService vms = new VendingMachineService(new VendingCoinInventoryService());
 
@@ -54,8 +54,8 @@ namespace MyVendingMachine.UnitTest
         {
             List<VendingCoin> insertedCoins = new List<VendingCoin>() {
                 new VendingCoin(){ Value = 1, Quantity = 1, CoinDenomination = CoinDenomination.EURO },
-                new VendingCoin(){ Value = 50, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = 50, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
             };
             VendingCoinInventoryService vis = new VendingCoinInventoryService();
             var invSnapshot = vis.CreateInventorySnapshot();
@@ -79,17 +79,17 @@ namespace MyVendingMachine.UnitTest
         {
             List<VendingCoin> insertedCoins = new List<VendingCoin>() {
                 new VendingCoin(){ Value = 1, Quantity = 1, CoinDenomination = CoinDenomination.EURO },
-                new VendingCoin(){ Value = 20, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = 50, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = 10, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = 20, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .20M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .10M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .20M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
             };
             VendingCoinInventoryService vis = new VendingCoinInventoryService();
             var invSnapshot = vis.CreateInventorySnapshot();
             VendingCoinRepository.VendingCoins.ToList().Clear();
             VendingCoinRepository.VendingCoins = new List<VendingCoin>()
             {
-                new VendingCoin() { Value = 10, CoinDenomination = CoinDenomination.CENT, Quantity = 1 },
+                new VendingCoin() { Value = .10M, CoinDenomination = CoinDenomination.CENT, Quantity = 1 },
             };
             VendingMachineService vms = new VendingMachineService(new VendingCoinInventoryService());
 
@@ -97,7 +97,7 @@ namespace MyVendingMachine.UnitTest
                 insertedCoins);
 
             Assert.Equal(.20M, result.ReturnedAmount);
-            Assert.Equal(.20M, result.ReturnedCoins.Where(w => w.Value == 20).Select(s => s.Amount).FirstOrDefault());
+            Assert.Equal(.20M, result.ReturnedCoins.Where(w => w.Value == .20M).Select(s => s.Amount).FirstOrDefault());
             Assert.Contains("Thank You", result.Message);
             vis.RestoreInventorySnapshot(invSnapshot.ToList());
         }
@@ -107,8 +107,8 @@ namespace MyVendingMachine.UnitTest
         {
             List<VendingCoin> insertedCoins = new List<VendingCoin>() {
                 new VendingCoin(){ Value = 1, Quantity = 1, CoinDenomination = CoinDenomination.EURO },
-                new VendingCoin(){ Value = 50, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
-                new VendingCoin(){ Value = 50, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
+                new VendingCoin(){ Value = .50M, Quantity = 1, CoinDenomination = CoinDenomination.CENT },
             };
 
             VendingMachineService vms = new VendingMachineService(new VendingCoinInventoryService());

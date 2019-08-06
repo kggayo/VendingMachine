@@ -41,9 +41,9 @@ namespace MyVendingMachine.UnitTest
             VendingCoinRepository.VendingCoins.Clear();
             VendingCoinRepository.VendingCoins = new List<VendingCoin>()
             {
-                new VendingCoin() { Value = 10, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
-                new VendingCoin() { Value = 20, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
-                new VendingCoin() { Value = 50, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
+                new VendingCoin() { Value = .10M, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
+                new VendingCoin() { Value = .20M, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
+                new VendingCoin() { Value = .50M, CoinDenomination = CoinDenomination.CENT, Quantity = 100 },
             };
 
             var result = vis.PickCoinsForChange(1.30M);

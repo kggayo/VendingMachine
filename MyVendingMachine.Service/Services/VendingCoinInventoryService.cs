@@ -21,13 +21,13 @@ namespace MyVendingMachine.Service.Services
             try
             {
                 var euroChangeAmount = Math.Truncate(changeAmount);
-                var centChangeAmount = (changeAmount % 1) * 100;
+                var centChangeAmount = changeAmount % 1;
 
                 var euroCoinsForChange = PickCoins(euroChangeAmount, CoinDenomination.EURO);
 
                 var euroChangeRemaining = euroChangeAmount - euroCoinsForChange.Sum(s => s.Amount);
                 if (euroChangeRemaining > 0)
-                    centChangeAmount += (euroChangeRemaining * 100); //convertes to cents
+                    centChangeAmount += euroChangeRemaining; 
 
                 var centCoinsForChange = PickCoins(centChangeAmount, CoinDenomination.CENT);
 

@@ -53,9 +53,9 @@
 
             <div class="mt-3">
                 <button type="button" data-value="1" data-denomination="EURO" class="btn btn-warning btn-lg button-round btn-coin">1 <br /> EURO</button>
-                <button type="button" data-value="10" data-denomination="CENT" class="btn btn-warning btn-lg button-round btn-coin">10 CENTS</button>
-                <button type="button" data-value="20" data-denomination="CENT" class="btn btn-warning btn-lg button-round btn-coin">20 CENTS</button>
-                <button type="button" data-value="50" data-denomination="CENT" class="btn btn-warning btn-lg button-round btn-coin">50 CENTS</button>
+                <button type="button" data-value=".10" data-denomination="CENT" class="btn btn-warning btn-lg button-round btn-coin">10 CENTS</button>
+                <button type="button" data-value=".20" data-denomination="CENT" class="btn btn-warning btn-lg button-round btn-coin">20 CENTS</button>
+                <button type="button" data-value=".50" data-denomination="CENT" class="btn btn-warning btn-lg button-round btn-coin">50 CENTS</button>
             </div>
         </div>
     </div>
@@ -132,7 +132,7 @@
                     if (result.returnedCoins.length > 0) {
                         coins = '\nCoins:';
                         $.each(result.returnedCoins, function (key, value) {
-                            coins += '\n ' + value.value + ' ' + value.coinDenomination + ' (x' + value.quantity + ')';
+                            coins += '\n ' + value.value.toFixed(2) + ' ' + value.coinDenomination + ' (x' + value.quantity + ')';
                         });
                     }
 
@@ -149,11 +149,7 @@
             function UpdateUIState(coinsInserted) {
                 var amount = 0.0;
                 for (var i = 0; i < coinsInserted.length; i++) {
-                    if (coinsInserted[i].CoinDenomination == 'CENT') {
-                        amount += ((coinsInserted[i].Value * coinsInserted[i].Quantity) / 100);
-                    } else {
-                        amount += coinsInserted[i].Value * coinsInserted[i].Quantity;
-                    }
+                    amount += coinsInserted[i].Value * coinsInserted[i].Quantity;
                 }
 
                 if (amount > 0) {
